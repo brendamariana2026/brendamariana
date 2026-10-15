@@ -18,7 +18,6 @@ import { UpdateClass } from "./domain/useCases/UpdateClass.js";
 import { DeleteClass } from "./domain/useCases/DeleteClass.js";
 import { CreateClass } from "./domain/useCases/CreateClass.js";
 
-
 const passwordHasher = new PasswordHasher();
 
 //const password = "MiClave123";
@@ -30,6 +29,7 @@ const passwordHasher = new PasswordHasher();
 //const resultado = await passwordHasher.verify(password,hash);
 
 //console.log("¿Coincide la contraseña?", resultado);
+// <label for="tipo-usuario">Tipo de usuario:</label>
 
 const app = document.getElementById("app");
 
@@ -52,9 +52,9 @@ console.log(
  * Use Cases
  */
 
-const registerUser = new RegisterUser(userRepository);
+const registerUser = new RegisterUser(userRepository,passwordHasher);
 
-const loginUser = new LoginUser(userRepository);
+const loginUser = new LoginUser(userRepository,passwordHasher);
 
 const createClass =new CreateClass(classRepository);
 
@@ -77,7 +77,9 @@ const classPresenter =
         getClasses,
         updateClass,
         deleteClass,
-        classRepository
+        classRepository,
+        passwordHasher
+
     );
 
 /*
@@ -90,7 +92,8 @@ const loginPresenter = new LoginPresenter(
         app,
         loginUser,
         registerUser,
-        classPresenter
+        classPresenter,
+        passwordHasher
     );
 
 /**
@@ -114,3 +117,5 @@ showLoginView(
     app,
     loginPresenter
 );
+
+
