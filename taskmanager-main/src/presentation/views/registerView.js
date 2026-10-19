@@ -63,10 +63,11 @@ export function showRegisterView(container, presenter) {
                         >
                     </div>
 
-                    <div  
+                    <div  class="form-group">
                          <label for="tipo-usuario">
                          Tipo de usuario: </label>
-                         <select id="tipo-usuario" name="tipoUsuario">
+                        
+                         <select id= "tipo-usuario" name="tipoUsuario">
                          <option value="" disabled selected>Selecciona un tipo de usuario</option>
                          <option value="profesor">Profesor</option>
                          <option value="estudiante">Estudiante</option>
@@ -103,7 +104,34 @@ export function showRegisterView(container, presenter) {
                 ></p>
 
             </div>
+        
+                        <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+             <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                <p><strong>Nombre:</strong> <span id="confirmName"></span></p>
+                <p><strong>correo electronico:</strong> <span id="confirmEmail"></span></p>
+                <p><strong>contraseña:</strong> <span id="confirmPassword"></span></p>
+                <p><strong>tipodeusuario:</strong> <span id="confirmTipoUsuario"></span></p>
+                
+                
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary btnconfirmar">Confirmar</button>
+                </div>
+                </div>
+                </div>
+                </div>
         </section>
+
     `;
 
     const registerForm =
@@ -113,6 +141,8 @@ export function showRegisterView(container, presenter) {
         event.preventDefault();
 
         const formData = new FormData(registerForm);
+        const modalElemento = document.getElementById("staticBackdrop");
+        const modal = new bootstrap.Modal(modalElemento); 
 
         const userData = {
             name: formData.get("name"),
@@ -120,18 +150,31 @@ export function showRegisterView(container, presenter) {
             password: formData.get("password"),
             tipoUsuario: formData.get("tipoUsuario") 
         };
+     document.getElementById("confirmName").textContent = userData.name;
+     document.getElementById("confirmEmail").textContent = userData.email;
+     document.getElementById("confirmPassword").textContent = "******";
+     document.getElementById("confirmTipoUsuario").textContent = userData.tipoUsuario;
+
+     registerForm.dataset.userData = JSON.stringify(userData);
+
+    modal.show();
+        //presenter.register(userData);
+    });
+    document.getElementById("btnconfirmar")-addEventListener("click", () => {
+        const userData = JSON.parse(registerForm.dataset.userData);
 
         presenter.register(userData);
+        const modalId = document.getElementById("staticBackdrop");
+        const modal = bootstrap.modal.getOrCreateInstance(modalId);
+        modal.hide();
     });
-
     const loginButton =
         document.getElementById("show-login");
 
     loginButton.addEventListener("click", () => {
         presenter.showLogin();
-    });
+        });
 }
-
 export function showRegisterMessage(message) {
     const messageElement =
         document.getElementById("register-message");
